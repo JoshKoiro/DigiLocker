@@ -10,5 +10,7 @@ function generatePassword(n,symbols) {
     }
     return retVal;
 }
+
+module.exports = generatePassword;
 //TEST CODE
 // console.log(generatePassword(8));
