@@ -1,17 +1,30 @@
 const charset = require('./charsets.js');
 const chars = charset.std;
-const caps = charset.caps;
-const numbers = charset.numbers;
-const symbols = charset.symbols;
+const caps = charset.caps_S;
+const nums = charset.nums_S;
+const symbols = charset.symbols_S;
 
-var options = []
+// options = [caps,nums]
 
-let config = (selections) => {
-  var char = chars
-  for(i = 0;i<selections.length;i++){
-    char = selections[i](char)
-  }
-  return char;
+// args.options = {caps: true, nums: true}
+//Object.keys(args.options) = ['caps', 'nums']
+
+let config = (options) => {
+  let array = Object.keys(options)
+  var char = chars;
+  array.forEach((element,i) => {
+    if(element === "caps"){
+      char = char + caps
+    } else if(element === "nums"){
+      char = char + nums
+    } else if(element === "symbols"){
+      char = char + symbols
+    } else{
+
+    }
+    return char;
+  })
+  return char
 }
 
 let generatePassword = (n,options) => {
@@ -25,7 +38,3 @@ let generatePassword = (n,options) => {
 
 module.exports = generatePassword;
 // TEST CODE
-var test = generatePassword(8,options);
-
-console.log(test)
-console.log(test.length);
