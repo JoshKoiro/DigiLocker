@@ -28,13 +28,12 @@ vorpal
   .option('-s,--symbols','Include symbols')
   .action(function(args, callback) {
     let password = generate(args.n,args.options)
-    this.log(password)
-    this.log('password is copied to the clipboard...')
-    copy(password)
+    this.log(chalk.green.italic('\r\n'+ "password generated: ") + chalk.underline(password + "\r\n"))
+    // copy(password)
     return this.prompt({
       type: 'input',
       name: 'continue',
-      message: 'Name what this is a password for: '
+      message: 'What is this password for? (leave blank to cancel): '
     },function(result){
       if(result.continue === ""){
         console.log(chalk.red.italic('\r\npassword not saved\r\n'));
@@ -51,7 +50,7 @@ vorpal
   vorpal
     .command('list','List all passwords')
     .action(function(args,callback){
-      read()
+      list()
       callback()
       return
     })
@@ -77,6 +76,22 @@ vorpal
     callback()
   })
 
+  vorpal
+  .command('copy', 'copy a password from your list into your clipboard')
+  .action(function(args,callback){
+    list()
+    return this.prompt({
+      type: 'input',
+      name: 'continue',
+      message: 'Type the number that corresponds to the password you would like to copy: '
+    },function(result){
+      let title = database[result.continue].name
+      let selection = database[result.continue].password
+      copy(selection)
+      console.log(chalk.green.italic('password for ' + title + ' has been copied to the clipboard...'))
+      callback()
+  })
+})
 
 vorpal
   .delimiter(chalk.green('Passworder >>>'))
@@ -86,9 +101,9 @@ vorpal
 
   //Read file function
 
-  let read = () => {
+  let list = () => {
     if(database[0] === undefined){
-      console.log('there is no data to return')
+      console.log(chalk.red.italic('there is no data to return'))
       return
     } else {
     let startingPoint = () => {
@@ -110,6 +125,7 @@ let refresh = () => {
   vorpal.find('data').remove()
   vorpal.find('save').remove()
   vorpal.find('load').remove()
+  vorpal.find('copy').remove()
 }
 
 let memory = (name,password) => {
@@ -120,15 +136,15 @@ let memory = (name,password) => {
 
 let load = (data) => {
   if(data === undefined){
-    console.log('there is no data to load run "save" before loading')
+    console.log(chalk.red.italic('there is no data to load from the save-file'))
     database = []
     return database
   } else {
   database = []
   for(i =0;i < data.length;i++){
     database.push(data[i])
-    console.log(data[i])
   }
+  console.log(chalk.green.italic('\r\nLoad complete!\r\n'))
   return database;
 }
 }
@@ -149,4 +165,13 @@ let save = (data) => {
     run()
 })
 }
+
+let initialize = () => {
+  console.log('\r\n\r\n\r\n');
+  console.log(chalk.green('--------------------------------------------------------------------------------'));
+  console.log(chalk.green('----------------------------------- DigiLock -----------------------------------'));
+  console.log('\r\n\r\n')
+}
+
+  initialize()
   run()
