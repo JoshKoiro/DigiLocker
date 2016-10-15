@@ -1,4 +1,5 @@
 const vorpal = require('vorpal')();
+const chalk = vorpal.chalk;
 const generate = require('./generate.js');
 const cp = require('copy-paste').global();
 const fs = require('fs');
@@ -21,8 +22,13 @@ vorpal
       name: 'continue',
       message: 'Name what this is a password for: '
     },function(result){
-      console.log('password saved for ' + result.continue)
+      if(result.continue === ""){
+        console.log(chalk.red.italic('\r\npassword not saved\r\n'));
+        callback()
+      } else {
+      console.log(chalk.green.italic('\r\npassword saved for ' + result.continue+'\r\n'))
       save(result.continue,password)
+    }
     })
 
   });
@@ -38,7 +44,7 @@ vorpal
 
 
 vorpal
-  .delimiter('|PasswordGen|>>')
+  .delimiter(chalk.green('Passworder >>>'))
   .show();
 
 }
@@ -51,8 +57,6 @@ vorpal
       if(err) {
           return console.log(err);
       }
-
-      console.log("The file was saved!");
       refresh()
       run()
   })
@@ -65,7 +69,7 @@ vorpal
       return console.log(err);
     }
     //when file opens...
-    console.log(data)
+    console.log(chalk.dim(data))
     refresh()
     run()
     });
