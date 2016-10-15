@@ -24,9 +24,34 @@ let database = df.database;
 
 let run = () => {
 
+vorpal
+    .command('create <account> []','Create a password')
+    .alias('new')
+    .option('-p, --password <password>','enter password')
+    .action(function(args,callback){
+      if(args.options.password !== undefined){
+        df.memory(args.account,args.options.password)
+        callback()
+      } else {
+        return this.prompt({
+          type: 'input',
+          name: 'continue',
+          message: 'Enter your password (press enter to cancel): '
+        },function(result){
+          if(result.continue === undefined) {
+            callback()
+          } else {
+          df.memory(args.account,result.continue)
+          callback()
+        }
+        })
+      }
+    })
+
 //random password generator
 vorpal
-  .command('gen <n> []', 'Generates a random password\r\nuse -c for capitals, -n for numbers, and -s for symbols')
+  .command('generate <n> []', 'Generates a random password - use -c for capitals, -n for numbers, and -s for symbols\r\n')
+  .alias('gen')
   .option('-c,--caps','Include capital letters')
   .option('-n,--nums','Include numbers')
   .option('-s,--symbols','Include symbols')
@@ -53,7 +78,7 @@ vorpal
 
   //List passwords that are loaded into memory
   vorpal
-    .command('list []','Show all password assigments that are loaded into memory')
+    .command('list []','Show all password assigments that are loaded into memory\r\n')
     .option('-s, --show','show passwords in list')
     .alias('ls')
     .alias('l')
@@ -67,17 +92,9 @@ vorpal
       return
     })
 
-  //Show raw data in memory (database object)
-  vorpal
-    .command('data', 'lists data stored in memory')
-    .action(function(args,callback){
-      this.log(database)
-      callback()
-    })
-
   //Writes database object to data.js
   vorpal
-  .command('save', 'saves to data file')
+  .command('save', 'saves to data file\r\n')
   .action(function(args,callback){
     save(database)
     callback()
@@ -87,7 +104,7 @@ vorpal
   //TODO: add a confimation that you want to overwrite any existing passwords saved in memory, or run the save() function before running the load() function in this method
 
   vorpal
-  .command('load','load external data file to memory')
+  .command('load','load external data file to memory\r\n')
   .action(function(args,callback){
     database = df.load(data)
     callback()
@@ -107,7 +124,7 @@ vorpal
   // })
 
   vorpal
-  .command('remove <listItem>','remove existing entry in list')
+  .command('remove <listItem>','remove existing entry in list\r\n')
   .action(function(args,callback){
     this.log(chalk.red.italic('\r\npassword for ' + "'" + database[args.listItem].name + "'" + ' has been removed...\r\n'))
     df.delete(args.listItem)
@@ -116,7 +133,7 @@ vorpal
 
   //Copy a selected password into your computer clipboard
   vorpal
-  .command('copy', 'copy a password from your list into your clipboard')
+  .command('copy', 'copy a password from your list into your clipboard\r\n')
   .action(function(args,callback){
     df.list()
     return this.prompt({
@@ -132,6 +149,14 @@ vorpal
   })
 })
 
+//Show raw data in memory (database object)
+vorpal
+  .command('data', 'lists data stored in memory\r\n')
+  .action(function(args,callback){
+    this.log(database)
+    callback()
+  })
+
 //running vorpal
 vorpal
   .delimiter(chalk.green('DigiLock >>>'))
@@ -142,7 +167,7 @@ vorpal
 
 //This function closes all the vorpal actions so that the run() function can re-create them
 let refresh = () => {
-  vorpal.find('gen').remove()
+  vorpal.find('generate').remove()
   vorpal.find('list').remove()
   vorpal.find('data').remove()
   vorpal.find('save').remove()
@@ -150,6 +175,7 @@ let refresh = () => {
   vorpal.find('copy').remove()
   // vorpal.find('edit').remove()
   vorpal.find('remove').remove()
+  vorpal.find('create').remove()
 }
 
 //save to data file function
