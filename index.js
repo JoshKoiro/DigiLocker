@@ -5,6 +5,9 @@ const cp = require('copy-paste').global();
 const fs = require('fs');
 //Must change node package to call global.copy & global.paste instead of GLOBAL.copy & GLOBAL.paste line 112 & 113 of index.js in copy-paste package
 
+//Memory variable to write to file on close
+let database = []
+
 let run = () => {
 
 vorpal
@@ -27,7 +30,8 @@ vorpal
         callback()
       } else {
       console.log(chalk.green.italic('\r\npassword saved for ' + result.continue+'\r\n'))
-      save(result.continue,password)
+      memory(result.continue,password)
+      callback()
     }
     })
 
@@ -41,6 +45,19 @@ vorpal
       return
     })
 
+  vorpal
+    .command('data', 'lists data stored in memory')
+    .action(function(args,callback){
+      this.log(database)
+      callback()
+    })
+
+  vorpal
+  .command('save', 'saves to data file')
+  .action(function(args,callback){
+    save(database)
+    callback()
+  })
 
 
 vorpal
@@ -48,19 +65,6 @@ vorpal
   .show();
 
 }
-
-//Save file function
-
-  let save = (name,password) => {
-    let passwordLog = '\r\n'+ name + ": " + password
-    fs.appendFile("./data.js", passwordLog, function(err) {
-      if(err) {
-          return console.log(err);
-      }
-      refresh()
-      run()
-  })
-  };
 
   //Read file function
 
@@ -78,5 +82,26 @@ vorpal
 let refresh = () => {
   vorpal.find('gen').remove()
   vorpal.find('list').remove()
+  vorpal.find('data').remove()
+  vorpal.find('save').remove()
+}
+
+let memory = (name,password) => {
+  return database.push({name: name, password: password})
+}
+
+let save = (data) => {
+  let dataSave = 'var exports = module.exports;\r\nexports = ' + "[ {}"
+  for(i = 0; i < data.length;i++){
+    dataSave = dataSave + ",{" + 'name: ' + "'"+ data[i].name + "'," + "password: " + "'" + data[i].password + "'" + "}" + '\r\n'
+  }
+  dataSave = dataSave + ']'
+  fs.writeFile("./data.js", dataSave, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+    refresh()
+    run()
+})
 }
   run()
