@@ -4,19 +4,21 @@ DigiLocker is a CLI (command line interface) application that is designed to **g
 
 ### Current Features
 
-- [x] **offline operation for maximum security**
+- [x] **Offline operation for maximum security**
 
-- [x] **passwords are able to be easily copied out of DigiLocker and pasted into a form or login page**
+- [x] **Passwords are able to be easily copied out of DigiLocker and pasted into a form or login page**
 
 - [x] **Able to generate random passwords with control over character selections**
 
 ### Features in the works
 
-- [ ] **Password generator that manipulates user input to generate memorable, secure passwords**
+- [ ] **Global installation for quick access from any point in a terminal session** (V0.4.0)
 
-- [ ] **passwords saved to encrypted data file which can easily be transferred to and from other computers**
+- [ ] **Password generator that manipulates user input to generate memorable, secure passwords** (V0.5.0)
 
-- [ ] **global installation for quick access from any point in a terminal session**
+- [ ] **Passwords saved to encrypted data file which can easily be transferred to and from other computers** (V0.6.0)
+
+- [ ] **Create authentication for access to your passwords** (V0.6.0)
 
 ## Installation
 

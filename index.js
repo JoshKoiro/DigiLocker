@@ -223,9 +223,9 @@ let save = (data) => {
 
 let initialize = () => {
   console.log('\r\n\r\n\r\n');
-  console.log(chalk.green('--------------------------------------------------------------------------------'));
-  console.log(chalk.green('----------------------------------- DigiLock -----------------------------------'));
-  console.log('\r\n\r\n')
+  // console.log(chalk.green('--------------------------------------------------------------------------------'));
+  // console.log(chalk.green('----------------------------------- DigiLocker -----------------------------------'));
+  // console.log('\r\n\r\n')
 }
 
   initialize()
