@@ -27,6 +27,14 @@ vorpal
 
   });
 
+  vorpal
+    .command('list','List all passwords')
+    .action(function(args,callback){
+      read()
+      callback()
+      return
+    })
+
 
 
 vorpal
@@ -38,16 +46,33 @@ vorpal
 //Save file function
 
   let save = (name,password) => {
-    let passwordLog = name + ' - ' + password + '\r\n'
+    let passwordLog = '\r\n'+ name + ": " + password
     fs.appendFile("./data.js", passwordLog, function(err) {
       if(err) {
           return console.log(err);
       }
 
       console.log("The file was saved!");
-      vorpal.find('gen').remove()
+      refresh()
       run()
   })
   };
 
+  //Read file function
+
+  let read = () => { fs.readFile('./data.js','utf-8',function(err,data){
+    if(err){
+      return console.log(err);
+    }
+    //when file opens...
+    console.log(data)
+    refresh()
+    run()
+    });
+}
+
+let refresh = () => {
+  vorpal.find('gen').remove()
+  vorpal.find('list').remove()
+}
   run()
