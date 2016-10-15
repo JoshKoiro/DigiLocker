@@ -3,6 +3,8 @@ const chalk = vorpal.chalk;
 const generate = require('./generate.js');
 const cp = require('copy-paste').global();
 const fs = require('fs');
+const dataFile = require('./data.js');
+const data = dataFile.data;
 //Must change node package to call global.copy & global.paste instead of GLOBAL.copy & GLOBAL.paste line 112 & 113 of index.js in copy-paste package
 
 //Memory variable to write to file on close
@@ -59,6 +61,13 @@ vorpal
     callback()
   })
 
+  vorpal
+  .command('load','load external data file to memory')
+  .action(function(args,callback){
+    database = load(data)
+    callback()
+  })
+
 
 vorpal
   .delimiter(chalk.green('Passworder >>>'))
@@ -68,15 +77,10 @@ vorpal
 
   //Read file function
 
-  let read = () => { fs.readFile('./data.js','utf-8',function(err,data){
-    if(err){
-      return console.log(err);
-    }
-    //when file opens...
-    console.log(chalk.dim(data))
-    refresh()
-    run()
-    });
+  let read = () => {
+  for(i =1;i<database.length;i++){
+    console.log(chalk.dim("("+ i + ") " + database[i].name + " : " + database[i].password))
+  }
 }
 
 let refresh = () => {
@@ -84,14 +88,27 @@ let refresh = () => {
   vorpal.find('list').remove()
   vorpal.find('data').remove()
   vorpal.find('save').remove()
+  vorpal.find('load').remove()
 }
 
 let memory = (name,password) => {
   return database.push({name: name, password: password})
 }
 
+//load file function
+
+let load = (data) => {
+  for(i =0;i < data.length;i++){
+    database.push(data[i])
+    console.log(data[i])
+  }
+  return database;
+}
+
+//save to data file function
+
 let save = (data) => {
-  let dataSave = 'var exports = module.exports;\r\nexports = ' + "[ {}"
+  let dataSave = 'var exports = module.exports;\r\nexports.data = ' + "[ {}"
   for(i = 0; i < data.length;i++){
     dataSave = dataSave + ",{" + 'name: ' + "'"+ data[i].name + "'," + "password: " + "'" + data[i].password + "'" + "}" + '\r\n'
   }
