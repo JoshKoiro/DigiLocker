@@ -59,3 +59,8 @@ exports.delete = (index) => {
   exports.database.splice(index,1)
   return exports.database;
 }
+
+exports.edit = (listItem,password) => {
+  exports.database[listItem].password = password;
+  return password;
+}

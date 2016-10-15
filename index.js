@@ -25,7 +25,7 @@ let database = df.database;
 let run = () => {
 
 vorpal
-    .command('create <account> []','Create a password')
+    .command('create <account> []','Create a password\r\n')
     .alias('new')
     .option('-p, --password <password>','enter password')
     .action(function(args,callback){
@@ -110,18 +110,30 @@ vorpal
     callback()
   })
 
-  // vorpal
-  // .command('edit <listItem> []','edit existing password in list')
-  // .option('-g, --generate <n> [options]','generate new random password')
-  // .option('-l, --list <item>','edit list item')
-  // .action(function(args,callback){
-  //   if(args.options.generate){
-  //     this.log('runnning generate')
-  //   } else {
-  //     this.log('not running generate')
-  //   }
-  //   callback()
-  // })
+  vorpal
+  .command('edit <listItem> []','edit existing password in list\r\n')
+  .option('-g, --generate <n> [options]','generate new random password')
+  .action(function(args,callback){
+    if(args.options.generate){
+      this.log(args.options.generate.options)
+      // generate(args.listItem,args.options.generate.options)
+      callback()
+      } else {
+      return this.prompt({
+        type: 'input',
+        name: 'continue',
+        message: 'Type your new password (press enter to cancel): '
+      },function(result){
+        if(result.continue === undefined){
+          callback()
+        } else {
+          df.edit(args.listItem,result.continue)
+          callback()
+        }
+      })
+    }
+    callback()
+  })
 
   vorpal
   .command('remove <listItem>','remove existing entry in list\r\n')
