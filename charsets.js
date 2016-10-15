@@ -1,3 +1,5 @@
+//CHARACTER SETS
+
 let std = "abcdefghijklmnopqrstuvwxyz"
 let caps = (char) => char + "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 let nums = (char) => char + "0123456789"

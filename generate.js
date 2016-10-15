@@ -1,3 +1,5 @@
+//RANDOM PASSWORD GENERATOR SCRIPT
+
 const charset = require('./charsets.js');
 const chars = charset.std;
 const caps = charset.caps_S;

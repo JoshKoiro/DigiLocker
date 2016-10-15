@@ -1,3 +1,6 @@
+//VORPAL.JS SCRIPT
+
+
 //vorpal dependency
 const vorpal = require('vorpal')();
 //chalk for prettifying the interface
@@ -19,7 +22,11 @@ const data = require('./data.js').data;
 //Memory variable to write to file on close
 let database = []
 
+//runtime function (all vorpal commands are re-initialized by run())
+
 let run = () => {
+
+//random password generator
 
 vorpal
   .command('gen <n> []', 'Generates a random password\r\nuse -c for capitals, -n for numbers, and -s for symbols')
@@ -47,13 +54,17 @@ vorpal
 
   });
 
+  //List passwords that are loaded into memory
+
   vorpal
-    .command('list','List all passwords')
+    .command('list','Show all password assigments that are loaded into memory')
     .action(function(args,callback){
       list()
       callback()
       return
     })
+
+  //Show raw data in memory (database object)
 
   vorpal
     .command('data', 'lists data stored in memory')
@@ -62,6 +73,8 @@ vorpal
       callback()
     })
 
+  //Writes database object to data.js
+
   vorpal
   .command('save', 'saves to data file')
   .action(function(args,callback){
@@ -69,12 +82,17 @@ vorpal
     callback()
   })
 
+  //load data.js into memory overwriting database object
+  //TODO: add a confimation that you want to overwrite any existing passwords saved in memory, or run the save() function before running the load() function in this method
+
   vorpal
   .command('load','load external data file to memory')
   .action(function(args,callback){
     database = load(data)
     callback()
   })
+
+  //Copy a selected password into your computer clipboard
 
   vorpal
   .command('copy', 'copy a password from your list into your clipboard')
@@ -92,6 +110,8 @@ vorpal
       callback()
   })
 })
+
+//running vorpal
 
 vorpal
   .delimiter(chalk.green('Passworder >>>'))
