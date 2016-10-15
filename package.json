@@ -1,5 +1,5 @@
 {
-  "name": "password-gen",
+  "name": "digilocker.js",
   "version": "0.0.1",
   "description": "CLI-password generator",
   "main": "index.js",

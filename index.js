@@ -11,6 +11,8 @@ const cp = require('copy-paste').global();
 //standard node file system dependency
 const fs = require('fs');
 //file to write saved passwords to
+
+//TODO: make a condition that will automatically create this file if it is not found
 const data = require('./data.js').data;
 
 
