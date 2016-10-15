@@ -78,7 +78,14 @@ vorpal
   //Read file function
 
   let read = () => {
-  for(i =1;i<database.length;i++){
+    let startingPoint = () => {
+      if(database[0].name === undefined){
+        return 1
+      } else {
+        return 0
+      }
+    }
+  for(i =startingPoint();i<database.length;i++){
     console.log(chalk.dim("("+ i + ") " + database[i].name + " : " + database[i].password))
   }
 }
@@ -98,6 +105,7 @@ let memory = (name,password) => {
 //load file function
 
 let load = (data) => {
+  database = []
   for(i =0;i < data.length;i++){
     database.push(data[i])
     console.log(data[i])
