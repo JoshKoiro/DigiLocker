@@ -8,7 +8,7 @@ const chalk = vorpal.chalk;
 const generate = require('./generate.js');
 //copy-paste npm package to allow for copying to the clipboard
 const cp = require('copy-paste').global();
-// NOTE Must change node package to call global.copy & global.paste instead of GLOBAL.copy & GLOBAL.paste line 112 & 113 of index.js in copy-paste package
+// NOTE Must change node package to call global.copy & global.paste instead of GLOBAL.copy & GLOBAL.paste line 112 & 113 of index.js in copy-paste package. not doing this will cause a crash after cloning code onto new machine.
 
 //standard node file system dependency
 const fs = require('fs');
@@ -25,7 +25,6 @@ let database = df.database;
 let run = () => {
 
 //random password generator
-
 vorpal
   .command('gen <n> []', 'Generates a random password\r\nuse -c for capitals, -n for numbers, and -s for symbols')
   .option('-c,--caps','Include capital letters')
@@ -53,17 +52,22 @@ vorpal
   });
 
   //List passwords that are loaded into memory
-
   vorpal
-    .command('list','Show all password assigments that are loaded into memory')
+    .command('list []','Show all password assigments that are loaded into memory')
+    .option('-s, --show','show passwords in list')
+    .alias('ls')
+    .alias('l')
     .action(function(args,callback){
+      if(args.options.show){
+        df.list(true)
+      } else {
       df.list()
+      }
       callback()
       return
     })
 
   //Show raw data in memory (database object)
-
   vorpal
     .command('data', 'lists data stored in memory')
     .action(function(args,callback){
@@ -72,7 +76,6 @@ vorpal
     })
 
   //Writes database object to data.js
-
   vorpal
   .command('save', 'saves to data file')
   .action(function(args,callback){
@@ -90,8 +93,28 @@ vorpal
     callback()
   })
 
-  //Copy a selected password into your computer clipboard
+  // vorpal
+  // .command('edit <listItem> []','edit existing password in list')
+  // .option('-g, --generate <n> [options]','generate new random password')
+  // .option('-l, --list <item>','edit list item')
+  // .action(function(args,callback){
+  //   if(args.options.generate){
+  //     this.log('runnning generate')
+  //   } else {
+  //     this.log('not running generate')
+  //   }
+  //   callback()
+  // })
 
+  vorpal
+  .command('remove <listItem>','remove existing entry in list')
+  .action(function(args,callback){
+    this.log(chalk.red.italic('\r\npassword for ' + "'" + database[args.listItem].name + "'" + ' has been removed...\r\n'))
+    df.delete(args.listItem)
+    callback()
+  })
+
+  //Copy a selected password into your computer clipboard
   vorpal
   .command('copy', 'copy a password from your list into your clipboard')
   .action(function(args,callback){
@@ -110,9 +133,8 @@ vorpal
 })
 
 //running vorpal
-
 vorpal
-  .delimiter(chalk.green('Passworder >>>'))
+  .delimiter(chalk.green('DigiLock >>>'))
   .show();
 
 }
@@ -126,6 +148,8 @@ let refresh = () => {
   vorpal.find('save').remove()
   vorpal.find('load').remove()
   vorpal.find('copy').remove()
+  // vorpal.find('edit').remove()
+  vorpal.find('remove').remove()
 }
 
 //save to data file function

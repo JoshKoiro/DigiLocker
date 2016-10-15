@@ -30,8 +30,7 @@ exports.load = (data) => {
 }
 
 //List database object entries function
-//TODO: make this function so that you can pass in a truthy and it shows the passwords, otherwise, it does not.
-exports.list = () => {
+exports.list = (show) => {
   if(exports.database[0] === undefined){
     console.log(chalk.red.italic('there is no data to return'))
     return
@@ -43,8 +42,20 @@ exports.list = () => {
       return 0
     }
   }
-for(i =startingPoint();i<exports.database.length;i++){
-  console.log(chalk.dim("("+ i + ") " + exports.database[i].name + " : " + exports.database[i].password))
+  if(show){
+    for(i =startingPoint();i<exports.database.length;i++){
+      console.log(chalk.dim("("+ i + ") " + exports.database[i].name + " : " + exports.database[i].password))
+    }
+  } else {
+    for(i =startingPoint();i<exports.database.length;i++){
+      console.log(chalk.dim("("+ i + ") " + exports.database[i].name))
+    }
+  }
+
 }
 }
+
+exports.delete = (index) => {
+  exports.database.splice(index,1)
+  return exports.database;
 }
