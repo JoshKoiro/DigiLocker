@@ -1,11 +1,18 @@
+//vorpal dependency
 const vorpal = require('vorpal')();
+//chalk for prettifying the interface
 const chalk = vorpal.chalk;
+//script to generate the random password
 const generate = require('./generate.js');
+//copy-paste npm package to allow for copying to the clipboard
 const cp = require('copy-paste').global();
+// NOTE Must change node package to call global.copy & global.paste instead of GLOBAL.copy & GLOBAL.paste line 112 & 113 of index.js in copy-paste package
+
+//standard node file system dependency
 const fs = require('fs');
-const dataFile = require('./data.js');
-const data = dataFile.data;
-//Must change node package to call global.copy & global.paste instead of GLOBAL.copy & GLOBAL.paste line 112 & 113 of index.js in copy-paste package
+//file to write saved passwords to
+const data = require('./data.js').data;
+
 
 //Memory variable to write to file on close
 let database = []
