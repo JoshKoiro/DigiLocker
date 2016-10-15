@@ -184,7 +184,7 @@ vorpal
 
 //running vorpal
 vorpal
-  .delimiter(chalk.green('DigiLock >>>'))
+  .delimiter(chalk.green('DigiLocker >>>'))
   .show();
 
 }
@@ -223,9 +223,9 @@ let save = (data) => {
 
 let initialize = () => {
   console.log('\r\n\r\n\r\n');
-  console.log(chalk.green('--------------------------------------------------------------------------------'));
-  console.log(chalk.green('----------------------------------- DigiLock -----------------------------------'));
-  console.log('\r\n\r\n')
+  // console.log(chalk.green('--------------------------------------------------------------------------------'));
+  // console.log(chalk.green('----------------------------------- DigiLock -----------------------------------'));
+  // console.log('\r\n\r\n')
 }
 
   initialize()
