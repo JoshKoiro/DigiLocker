@@ -1,6 +1,5 @@
 //VORPAL.JS SCRIPT
 
-
 //vorpal dependency
 const vorpal = require('vorpal')();
 //chalk for prettifying the interface
@@ -18,9 +17,8 @@ const fs = require('fs');
 //TODO: make a condition that will automatically create this file if it is not found
 const data = require('./data.js').data;
 
-
-//Memory variable to write to file on close
-let database = []
+const df = require('./dataFunctions.js');
+let database = df.database;
 
 //runtime function (all vorpal commands are re-initialized by run())
 
@@ -47,7 +45,7 @@ vorpal
         callback()
       } else {
       console.log(chalk.green.italic('\r\npassword saved for ' + result.continue+'\r\n'))
-      memory(result.continue,password)
+      df.memory(result.continue,password)
       callback()
     }
     })
@@ -59,7 +57,7 @@ vorpal
   vorpal
     .command('list','Show all password assigments that are loaded into memory')
     .action(function(args,callback){
-      list()
+      df.list()
       callback()
       return
     })
@@ -88,7 +86,7 @@ vorpal
   vorpal
   .command('load','load external data file to memory')
   .action(function(args,callback){
-    database = load(data)
+    database = df.load(data)
     callback()
   })
 
@@ -97,7 +95,7 @@ vorpal
   vorpal
   .command('copy', 'copy a password from your list into your clipboard')
   .action(function(args,callback){
-    list()
+    df.list()
     return this.prompt({
       type: 'input',
       name: 'continue',
@@ -119,26 +117,8 @@ vorpal
 
 }
 
-  //Read file function
 
-  let list = () => {
-    if(database[0] === undefined){
-      console.log(chalk.red.italic('there is no data to return'))
-      return
-    } else {
-    let startingPoint = () => {
-      if(database[0].name === undefined){
-        return 1
-      } else {
-        return 0
-      }
-    }
-  for(i =startingPoint();i<database.length;i++){
-    console.log(chalk.dim("("+ i + ") " + database[i].name + " : " + database[i].password))
-  }
-}
-}
-
+//This function closes all the vorpal actions so that the run() function can re-create them
 let refresh = () => {
   vorpal.find('gen').remove()
   vorpal.find('list').remove()
@@ -148,29 +128,7 @@ let refresh = () => {
   vorpal.find('copy').remove()
 }
 
-let memory = (name,password) => {
-  return database.push({name: name, password: password})
-}
-
-//load file function
-
-let load = (data) => {
-  if(data === undefined){
-    console.log(chalk.red.italic('there is no data to load from the save-file'))
-    database = []
-    return database
-  } else {
-  database = []
-  for(i =0;i < data.length;i++){
-    database.push(data[i])
-  }
-  console.log(chalk.green.italic('\r\nLoad complete!\r\n'))
-  return database;
-}
-}
-
 //save to data file function
-
 let save = (data) => {
   let dataSave = 'var exports = module.exports;\r\nexports.data = ' + "[ {}"
   for(i = 0; i < data.length;i++){
@@ -185,6 +143,8 @@ let save = (data) => {
     run()
 })
 }
+
+
 
 let initialize = () => {
   console.log('\r\n\r\n\r\n');
