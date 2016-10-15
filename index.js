@@ -145,8 +145,19 @@ vorpal
 
   //Copy a selected password into your computer clipboard
   vorpal
-  .command('copy', 'copy a password from your list into your clipboard\r\n')
+  .command('copy [number]', 'copy a password from your list into your clipboard\r\n')
   .action(function(args,callback){
+    if(df.database.length === 0){
+      this.log(chalk.red.italic('\r\nthere is no data to copy either load existing data from file or create some...\r\n'))
+      callback()
+    } else {
+    if(args.number !== undefined){
+      let title = database[args.number].name
+      let selection = database[args.number].password
+      copy(selection)
+      console.log(chalk.green.italic('password for ' + title + ' has been copied to the clipboard...'))
+      callback()
+    } else {
     df.list()
     return this.prompt({
       type: 'input',
@@ -156,9 +167,11 @@ vorpal
       let title = database[result.continue].name
       let selection = database[result.continue].password
       copy(selection)
-      console.log(chalk.green.italic('password for ' + title + ' has been copied to the clipboard...'))
+      console.log(chalk.green.italic('\r\npassword for ' + title + ' has been copied to the clipboard...\r\n'))
       callback()
   })
+}
+}
 })
 
 //Show raw data in memory (database object)
