@@ -78,6 +78,10 @@ vorpal
   //Read file function
 
   let read = () => {
+    if(database[0] === undefined){
+      console.log('there is no data to return')
+      return
+    } else {
     let startingPoint = () => {
       if(database[0].name === undefined){
         return 1
@@ -88,6 +92,7 @@ vorpal
   for(i =startingPoint();i<database.length;i++){
     console.log(chalk.dim("("+ i + ") " + database[i].name + " : " + database[i].password))
   }
+}
 }
 
 let refresh = () => {
@@ -105,12 +110,18 @@ let memory = (name,password) => {
 //load file function
 
 let load = (data) => {
+  if(data === undefined){
+    console.log('there is no data to load run "save" before loading')
+    database = []
+    return database
+  } else {
   database = []
   for(i =0;i < data.length;i++){
     database.push(data[i])
     console.log(data[i])
   }
   return database;
+}
 }
 
 //save to data file function
