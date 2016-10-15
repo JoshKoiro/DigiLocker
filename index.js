@@ -184,7 +184,7 @@ vorpal
 
 //running vorpal
 vorpal
-  .delimiter(chalk.green('DigiLock >>>'))
+  .delimiter(chalk.green('DigiLocker >>>'))
   .show();
 
 }
